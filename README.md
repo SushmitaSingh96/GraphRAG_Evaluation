@@ -24,5 +24,5 @@ salloc --job-name=interactive_test --gres=gpu:a100:1 -C a100_80 --time=00:30:00 
 ### 3. Start the VLLM server
 
 ```bash
-python -m vllm.entrypoints.openai.api_server --model /home/hpc/b216dc/b216dc15/models/facebook_opt-1.3b
+python -m vllm.entrypoints.openai.api_server --model /$WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --gpu_memory_utilization=0.7
 ```
