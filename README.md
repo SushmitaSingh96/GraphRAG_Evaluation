@@ -9,10 +9,11 @@ This repository contains the code for evaluating **GraphRAG** on tax-related law
 $WORK /home/atuin/b216dc/b216dc15
 $HOME /home/hpc/b216dc/b216dc15
 $HPCVAULT /home/vault/b216dc/b216dc15
+```
 
 ### 1. Activate Conda Environment
 ```bash
-conda activate /apps/jupyterhub/jh3.1.1-py3.11/envs/pytorch-2.3.0
+conda activate pytorch-2.3.0
 ```
 ### 2. Allocate GPU Resources
 
