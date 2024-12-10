@@ -58,7 +58,7 @@ INFO 12-09 23:46:39 launcher.py:27] Route: /v1/embeddings, Methods: POST
 Embedding
 ```bash
 nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/intfloat_e5-mistral-7b-instruct --port 8001 --gpu_memory_utilization=0.3 --max-num-seqs 64 > $WORK/logs/mistral_8001.log 2>&1 &
-tail -f $WORK/logs/mistral_nemo_8000.log
+tail -f $WORK/logs/mistral_8001.log
 ```
 prompt tune
 ```bash
