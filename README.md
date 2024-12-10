@@ -65,3 +65,20 @@ prompt tune
 cd graphrag_ollama
 python -m graphrag prompt-tune --root ./taxrag --language German --domain tax 
 ```
+
+### 5. Final script
+
+```bash
+echo "Load env pytorch-2.3.0"
+conda activate pytorch-2.3.0
+echo "Load weights of LlamaFinetuneBase_Mistral-Nemo-12B"
+#here enter the steps to start serrver of lamaFinetuneBase_Mistral-Nemo-12B model, until the message "INFO:     Uvicorn running on http://0.0.0.0:8000" is received, then shut it down
+echo "Load weights of intfloat_e5-mistral-7b-instruct"
+##here enter the steps to start serrver of intfloat_e5-mistral-7b-instruct model, until the message "INFO:     Uvicorn running on http://0.0.0.0:8001" is received, then shut it down
+echo "set proxies"
+export http_proxy=http://proxy:80 #use these proxy to access the internet
+export https_proxy=http://proxy:80
+export no_proxy=localhost,127.0.0.1 #do not use proxy for localhost
+export NO_PROXY=localhost,127.0.0.1
+echo "starting prompt tuning script"
+#steps here to stat prompt_tune script
