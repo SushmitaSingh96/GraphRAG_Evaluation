@@ -82,3 +82,16 @@ export no_proxy=localhost,127.0.0.1 #do not use proxy for localhost
 export NO_PROXY=localhost,127.0.0.1
 echo "starting prompt tuning script"
 #steps here to stat prompt_tune script
+
+### 6. Payload expected by the model:
+{
+  "model": "/path/to/models/LlamaFinetuneBase_Mistral-Nemo-12B",
+  "messages": [
+    {"role": "user", "content": "Once upon a time, there was a brave knight."}
+  ],
+  "temperature": 0.7,
+  "max_tokens": 200,
+  "stop": ["\n"],
+  "top_p": 0.9,
+  "top_k": 50
+}
