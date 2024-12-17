@@ -62,11 +62,17 @@ tail -f $WORK/logs/mistral_8001.log
 ```
 prompt tune
 ```bash
-cd graphrag_ollama
-python -m graphrag prompt-tune --root ./taxrag --language German --domain tax 
+cd graphrag_ollama/taxrag
+python -m graphrag prompt-tune --root . --language German --domain tax 
 ```
 
-### 5. Final script
+### 5. Indexing script
+```bash
+cd graphrag_ollama
+python -m graphrag index --root ./taxrag
+```
+
+### 6. Final script
 
 ```bash
 echo "Load env pytorch-2.3.0"
