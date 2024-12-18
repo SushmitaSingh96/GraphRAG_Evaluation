@@ -36,12 +36,12 @@ IF needed start each server once individually, before starting the script of run
 LLM LlamaFinetuneBase_Mistral-Nemo-12B
 ```bash
 python -m vllm.entrypoints.openai.api_server --model /$WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --gpu_memory_utilization=0.7
-nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --gpu_memory_utilization=0.8 --max_model_len=128000 --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_8000.log 2>&1 &
+nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --dtype half --gpu_memory_utilization=0.8 --max_model_len=128000 --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_8000.log 2>&1 &
 tail -f $WORK/logs/mistral_nemo_8000.log
 ```
 LLM mistralai_Mistral-Nemo-Base-2407
 ```bash
-nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/mistralai_Mistral-Nemo-Base-2407 --port 8000 --gpu_memory_utilization=0.8 --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_base_8000.log 2>&1 &
+nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/mistralai_Mistral-Nemo-Base-2407 --port 8000 --dtype half --gpu_memory_utilization=0.8 --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_base_8000.log 2>&1 &
 ```
 
 ```bash
