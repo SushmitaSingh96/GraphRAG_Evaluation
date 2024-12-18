@@ -110,3 +110,6 @@ echo "starting prompt tuning script"
   "top_p": 0.9,
   "top_k": 50
 }
+```
+### 6. Errors
+Expected json from LLM:  "entity_types": ['military unit', 'organization', 'person', 'location', 'event', 'date', 'equipment'] from prompt tune.
