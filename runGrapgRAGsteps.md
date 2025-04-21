@@ -11,11 +11,12 @@ salloc --job-name=interactive_test --gres=gpu:a100:1 -C a100_80 --time=04:00:00 
 ```bash
 conda activate pytorch-2.3.0
 ```
+```bash
   export http_proxy=http://proxy:80 #use these proxy to access the internet
   export https_proxy=http://proxy:80
   export no_proxy=localhost,127.0.0.1 #do not use proxy for localhost
   export NO_PROXY=localhost,127.0.0.1
-
+```
 ### 4. Start LLM model meta-llama_Llama-3.1-8B-Instruct
 ```bash
 nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/meta-llama_Llama-3.1-8B-Instruct --port 8000 --gpu_memory_utilization=0.8 --chat-template $HOME/scripts/tool_chat_template_llama3.1_json.jinja > $WORK/logs/llama_8b_8000.log 2>&1 &
