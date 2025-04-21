@@ -1,6 +1,6 @@
 # GraphRAG Evaluation
 
-This repository contains the code for evaluating **GraphRAG** on tax-related law data in the German language. Note: Data is not included, only the evaluation code.
+This repository contains the scripts to evaluate **GraphRAG** on tax-related law data in the German language on HPC. Note: Data is not included, only the evaluation code.
 
 ## Steps to Run the Evaluation
 
