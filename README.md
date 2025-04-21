@@ -1,6 +1,6 @@
 # GraphRAG Evaluation
 
-This repository contains the scripts to evaluate **GraphRAG** on tax-related law data in the German language on HPC. Note: Data is not included, only the evaluation code.
+This repository contains the scripts to evaluate **GraphRAG** on tax-related law data in the German language on HPC. Note: Data is not included. This repo only contains the steps I had used to run the open source models using vLLM on a HPC cluster.
 
 ## Steps to Run the Evaluation
 
