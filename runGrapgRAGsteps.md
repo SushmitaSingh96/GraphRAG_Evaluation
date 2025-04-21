@@ -23,6 +23,25 @@ conda activate pytorch-2.3.0
 ```bash
 nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/meta-llama_Llama-3.1-8B-Instruct --port 8000 --gpu_memory_utilization=0.8 --chat-template $HOME/scripts/tool_chat_template_llama3.1_json.jinja > $WORK/logs/llama_8b_8000.log 2>&1 &
 ```
+Other Tested Models:
+
+LLM LlamaFinetuneBase_Mistral-Nemo-12B
+```bash
+python -m vllm.entrypoints.openai.api_server --model /$WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --gpu_memory_utilization=0.7
+nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --dtype half --gpu_memory_utilization=0.8 --max_model_len=128000 --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_8000.log 2>&1 &
+tail -f $WORK/logs/mistral_nemo_8000.log
+```
+
+LLM mistralai_Mistral-Nemo-Base-2407
+```bash
+nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/mistralai_Mistral-Nemo-Base-2407 --port 8000 --gpu_memory_utilization=0.8 --guided-decoding-backend=lm-format-enforcer --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_base_8000.log 2>&1 &
+
+```
+
+LLM meta-llama_Llama-3.2-1B
+```bash
+nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/meta-llama_Llama-3.2-1B --port=8000 --gpu_memory_utilization=0.8 > $WORK/logs/llama_1b_8000.log 2>&1 &
+```
 
 ### 5. Start Embedding model intfloat_e5-mistral-7b-instruct
 ```bash
