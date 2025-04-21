@@ -4,13 +4,6 @@ This repository contains the scripts to evaluate **GraphRAG** on tax-related law
 
 ## Steps to Run the Evaluation
 
-### 0. Your dirs:
-```bash
-$WORK /home/atuin/b216dc/b216dc15
-$HOME /home/hpc/b216dc/b216dc15
-$HPCVAULT /home/vault/b216dc/b216dc15
-```
-
 ### 1. Activate Conda Environment
 ```bash
 conda activate pytorch-2.3.0
