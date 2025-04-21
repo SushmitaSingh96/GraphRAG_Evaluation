@@ -10,10 +10,14 @@ ssh
 salloc --job-name=interactive_test --gres=gpu:a100:1 -C a100_80 --time=04:00:00 --ntasks=1 --cpus-per-task=4 --partition=a100
 ```
 
-### 3. Activate Env
+### 3. Activate Env and proxy settings
 ```bash
 conda activate pytorch-2.3.0
 ```
+  export http_proxy=http://proxy:80 #use these proxy to access the internet
+  export https_proxy=http://proxy:80
+  export no_proxy=localhost,127.0.0.1 #do not use proxy for localhost
+  export NO_PROXY=localhost,127.0.0.1
 
 ### 4. Start LLM model meta-llama_Llama-3.1-8B-Instruct
 ```bash
