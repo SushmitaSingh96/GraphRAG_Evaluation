@@ -1,9 +1,6 @@
 ### FINAL STEPS:
 
 ### 1. Login to cluster front end
-```bash
-ssh
-```
 
 ### 2. Job Allocation Request
 ```bash
