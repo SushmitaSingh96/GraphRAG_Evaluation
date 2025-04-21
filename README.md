@@ -1,4 +1,4 @@
-### FINAL STEPS:
+This repository contains the steps used to run the LLM and embedding model in the HPC cluster, the commands that were used and the final project report.
 
 ### 1. Login to cluster front end
 
