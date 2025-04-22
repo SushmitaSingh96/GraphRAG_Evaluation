@@ -1,4 +1,4 @@
-This repository contains the steps used to run the LLM and embedding model in a HPC cluster, the commands that were used to set the environment and the final project report. The goal of this proejct was to evaluate graphRAG an open source RAG (Retrieval Augmented Generation) framework from Microsoft, on German legal tax data. 
+This repository contains the high-level steps and essential commands used to run the LLM and embedding model on an HPC cluster, including the environment setup. These are not full scripts but rather the key commands extracted from more detailed Python and Bash scripts. The final report will be added once it is published by my university. The goal of this project was to evaluate GraphRAG, an open-source Retrieval-Augmented Generation (RAG) framework developed by Microsoft, on German legal tax data. 
 
 ### 1. Login to cluster front end
 
