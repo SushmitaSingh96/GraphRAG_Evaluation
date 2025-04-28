@@ -1,68 +1,147 @@
-This repository contains the high-level steps and essential commands used to run the LLM and embedding model on an HPC cluster, including the environment setup. These are not full scripts but rather the key commands extracted from more detailed Python and Bash scripts. The final report will be added once it is published by my university. The goal of this project was to evaluate GraphRAG, an open-source Retrieval-Augmented Generation (RAG) framework developed by Microsoft, on German legal tax data. 
+# GraphRAG Evaluation on German Tax Law Data
 
-### 1. Login to cluster front end
+This repository evaluates Microsoft's [GraphRAG](https://microsoft.github.io/graphrag/get_started/) framework on a German tax law dataset.
 
-### 2. Job Allocation Request
+The evaluation focuses on:
+- **Prompt tuning** to adapt retrieval for domain-specific needs
+- **Indexing** the legal corpus into a GraphRAG workspace
+- **Baseline creation** without GraphRAG for comparison
+- **Querying** the indexed knowledge base
+- **Evaluation** of retrieval performance improvements using [RAGAS](https://docs.ragas.io)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install Requirements
+
+Clone this repository and install the required packages:
+
 ```bash
-salloc --job-name=interactive_test --gres=gpu:a100:1 -C a100_80 --time=04:00:00 --ntasks=1 --cpus-per-task=4 --partition=a100
+pip install -r requirements.txt
 ```
 
-### 3. Activate Env and proxy settings
-```bash
-conda activate pytorch-2.3.0
-```
-```bash
-  export http_proxy=http://proxy:80 #use these proxy to access the internet
-  export https_proxy=http://proxy:80
-  export no_proxy=localhost,127.0.0.1 #do not use proxy for localhost
-  export NO_PROXY=localhost,127.0.0.1
-```
-### 4. Start LLM model meta-llama_Llama-3.1-8B-Instruct
-```bash
-nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/meta-llama_Llama-3.1-8B-Instruct --port 8000 --gpu_memory_utilization=0.8 --chat-template $HOME/scripts/tool_chat_template_llama3.1_json.jinja > $WORK/logs/llama_8b_8000.log 2>&1 &
-```
-Other Tested Models:
+Follow Microsoft's [GraphRAG Installation Guide](https://microsoft.github.io/graphrag/get_started/) to correctly configure GraphRAG.
 
-LLM LlamaFinetuneBase_Mistral-Nemo-12B
-```bash
-python -m vllm.entrypoints.openai.api_server --model /$WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --gpu_memory_utilization=0.7
-nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/LlamaFinetuneBase_Mistral-Nemo-12B --port 8000 --dtype half --gpu_memory_utilization=0.8 --max_model_len=128000 --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_8000.log 2>&1 &
-tail -f $WORK/logs/mistral_nemo_8000.log
-```
+The GraphRAG workspace used in this project is named **`legalRAG`**.
 
-LLM mistralai_Mistral-Nemo-Base-2407
-```bash
-nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/mistralai_Mistral-Nemo-Base-2407 --port 8000 --gpu_memory_utilization=0.8 --guided-decoding-backend=lm-format-enforcer --chat-template $HOME/scripts/tool_chat_template_mistral.jinja > $WORK/logs/mistral_nemo_base_8000.log 2>&1 &
+---
 
-```
+### 2. Important Libraries & Models
 
-LLM meta-llama_Llama-3.2-1B
-```bash
-nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/meta-llama_Llama-3.2-1B --port=8000 --gpu_memory_utilization=0.8 > $WORK/logs/llama_1b_8000.log 2>&1 &
-```
+| Purpose            | Model Name                          |
+| :----------------- | :---------------------------------- |
+| Main LLM            | `Llama-3.1-8B-Instruct`             |
+| Embedding Model     | `e5-mistral-7b-instruct`            |
+| Evaluation LLM (RAGAS) | `gpt-4o-mini`                   |
 
-### 5. Start Embedding model intfloat_e5-mistral-7b-instruct
+### 3. Modifications to Default GraphRAG Settings
+
+The following changes were made to improve performance:
+
+| Parameter                  | Original | New  | Description |
+| :------------------------- | :------: | :--: | :----------- |
+| `LLM_MAX_TOKENS`            | 4000     | 1024 | Reduced maximum context size |
+| `LLM_TEMPERATURE`           | 0        | 0.3  | Introduced slight variability in responses |
+| `LLM_TOP_P`                 | 1        | 0.8  | Limited token diversity |
+| `LLM_CONCURRENT_REQUESTS`   | 25       | 15   | Reduced concurrent requests for stability |
+
+## 4. Job Submission
+
+All tasks (indexing, tuning, baseline creation, querying) are handled using a **single Slurm job script**:  
+**`run_graphrag_job.sh`**
+
+#### Usage:
+
 ```bash
-nohup python -m vllm.entrypoints.openai.api_server --model $WORK/models/intfloat_e5-mistral-7b-instruct --port 8001 --gpu_memory_utilization=0.7> $WORK/logs/mistral_8001.log 2>&1 &
+sbatch run_graphrag_job.sh [index|tune|query|baseline]
 ```
 
-### 6. Run Prompt Tune script
+- To run indexing:
+  ```bash
+  sbatch run_graphrag_job.sh index
+  ```
+
+- To run prompt tuning:
+  ```bash
+  sbatch run_graphrag_job.sh tune
+  ```
+
+- To create baseline (without GraphRAG retrieval):
+  ```bash
+  sbatch run_graphrag_job.sh baseline
+  ```
+
+- To run querying:
+  ```bash
+  sbatch run_graphrag_job.sh query
+  ```
+
+Each job automatically:
+- Sets the correct job name
+- Redirects logs to appropriate folders (`batch_logs/logs/`)
+- Activates the environment
+- Executes the corresponding Python script
+
+---
+
+## 📂 Repository Structure
+
 ```bash
-cd legalRAG
-python -m graphrag prompt-tune --root . --language German
+GraphRAG_Evaluation/
+├── run_graphrag_job.sh           # Unified Slurm job submission script
+├── batch_logs/                   # Log outputs from Slurm jobs
+│    ├── logs/
+│         ├── indexing/
+│         ├── tuning/
+│         ├── querying/
+│         ├── baseline/
+├── scripts/
+│    ├── indexing.py              # Indexing script
+│    ├── prompt_tune.py           # Prompt tuning script
+│    ├── query_graphrag.py        # GraphRAG querying script
+│    └── baseline_query.py        # Baseline (LLM-only querying) script
+├── requirements.txt              # Python package requirements
+└── README.md
 ```
 
-### 7. Run Indexing script
-```bash
-cd ..
-python -m graphrag index --root ./legalRAG
-```
+---
 
-### Trouble shooting
-Logs of the command runs are present in legalRAG/logs
-Logs of the server are present in $WORK/logs/
+## 📚 Project Details
 
+| Component | Description |
+| :--- | :--- |
+| **vLLM** | Version 0.6.5 |
+| **GraphRAG** | Version 1.0.0 |
+| **Requirements** | See `requirements.txt` (all libraries and versions listed) |
 
+### Models Used
+| Purpose | Model | Link |
+| :--- | :--- | :--- |
+| Main LLM | [meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) |
+| Embedding Model | [intfloat/e5-mistral-7b-instruct](https://huggingface.co/intfloat/e5-mistral-7b-instruct) |
+| Evaluation Model | `gpt-4o-mini` |
 
+---
 
+## 📈 Key Findings (RAGAS Evaluation)
 
+Using GraphRAG significantly improved both **Answer Correctness** and **Answer Relevancy** compared to using the LLM alone:
+
+| Metric           | Baseline (LLM-only) | GraphRAG | Improvement |
+| :--------------- | :-----------------: | :------: | :---------: |
+| **Correctness**  | 0.4199               | 0.5018   | **+8.2%** |
+| **Relevancy**    | 0.6818               | 0.7617   | **+8.0%** |
+
+GraphRAG improves the overall quality of responses by grounding answers more accurately in the retrieved data.
+
+---
+
+## 📢 Notes
+
+- This repository assumes that GraphRAG is properly installed and accessible.
+- Ensure your compute environment has sufficient GPU memory.
+- The workspace used is named **`legalRAG`**.
+- All Python scripts (`indexing.py`, `prompt_tune.py`, `baseline_query.py`, `query_graphrag.py`) should be adapted if applying to different datasets.
+
+---
