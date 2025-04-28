@@ -10,19 +10,6 @@ This project systematically evaluates Microsoft's GraphRAG framework on a German
 
 ---
 
-# GraphRAG Evaluation on German Tax Law Data
-
-This repository evaluates Microsoft's [GraphRAG](https://microsoft.github.io/graphrag/get_started/) framework on a German tax law dataset.
-
-The evaluation focuses on:
-- **Prompt tuning** to adapt retrieval for domain-specific needs
-- **Indexing** the legal corpus into a GraphRAG workspace
-- **Baseline creation** without GraphRAG for comparison
-- **Querying** the indexed knowledge base
-- **Evaluation** of retrieval performance improvements using [RAGAS](https://docs.ragas.io)
-
----
-
 ## 🚀 Getting Started
 
 ### 1. Install Requirements
