@@ -1,3 +1,15 @@
+# 🚀 GraphRAG Evaluation for Legal Domain
+
+This project systematically evaluates Microsoft's GraphRAG framework on a German tax law dataset, combining LLM-based retrieval with advanced graph search.
+
+🔹 Built full GraphRAG pipelines (Indexing, Prompt Tuning, Baseline, Querying)  
+🔹 Used [vLLM](https://github.com/vllm-project/vllm) to serve local LLaMA-3.1-8B-Instruct models as an OpenAI-compatible API  
+🔹 Customized large language models (LLaMA-3.1-8B-Instruct) and embeddings (e5-mistral-7b-instruct)  
+🔹 Benchmarked retrieval effectiveness using RAGAS and GPT-4o-mini evaluations  
+🔹 Scalable to HPC clusters with Slurm job automation and optimized for A100 GPUs
+
+---
+
 # GraphRAG Evaluation on German Tax Law Data
 
 This repository evaluates Microsoft's [GraphRAG](https://microsoft.github.io/graphrag/get_started/) framework on a German tax law dataset.
@@ -118,16 +130,13 @@ GraphRAG_Evaluation/
 
 ---
 
-## 📈 Key Findings (RAGAS Evaluation)
+### Evaluation (RAGAS Benchmarking)
 
-Using GraphRAG significantly improved both **Answer Correctness** and **Answer Relevancy** compared to using the LLM alone:
+Evaluation metrics were computed using RAGAS to assess answer correctness and answer relevancy.
 
-| Metric           | Baseline (LLM-only) | GraphRAG | Improvement |
-| :--------------- | :-----------------: | :------: | :---------: |
-| **Correctness**  | 0.4199               | 0.5018   | **+8.2%** |
-| **Relevancy**    | 0.6818               | 0.7617   | **+8.0%** |
+GraphRAG’s retrieval-augmented approach was observed to improve grounding and relevance of generated responses compared to querying the LLM alone.
 
-GraphRAG improves the overall quality of responses by grounding answers more accurately in the retrieved data.
+**Detailed evaluation findings will be made available upon official publication.**
 
 ---
 
