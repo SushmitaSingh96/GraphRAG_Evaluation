@@ -3,6 +3,8 @@ import requests
 import logging
 from tqdm import tqdm
 import os
+import subprocess
+import time
 
 # File paths
 input_file_path = os.path.expandvars("path/to/query_data_src.json") #Input file path
@@ -13,6 +15,17 @@ vllm_server_url = "http://localhost:8000/v1/chat/completions"
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+# Start vLLM server
+def start_vllm_server():
+    logging.info("Starting vLLM server...")
+    server_command = [
+        "python3",
+        "-m", "vllm.entrypoints.openai.api_server",
+        "--model", "path/to/models/meta-llama/Llama-3.1-8B-Instruct",
+        "--port", "8000"
+    ]
+    return subprocess.Popen(server_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 # Function to send a request to the VLLM server
 def query_vllm(question):
@@ -54,48 +67,57 @@ def save_intermediate_results(results, file_path):
 
 # Main script execution
 def main():
-    logging.info("Loading input JSON file...")
+    vllm_process = start_vllm_server()
+    time.sleep(30)  # Wait for server to initialize
+
     try:
-        with open(input_file_path, 'r', encoding='utf-8') as file:
-            input_data = json.load(file)
-    except Exception as e:
-        logging.error(f"Error reading input JSON file: {e}")
-        return
+        logging.info("Loading input JSON file...")
+        try:
+            with open(input_file_path, 'r', encoding='utf-8') as file:
+                input_data = json.load(file)
+        except Exception as e:
+            logging.error(f"Error reading input JSON file: {e}")
+            return
 
-    logging.info("Loading existing results...")
-    existing_results = load_existing_results(output_file_path)
-    processed_ids = {item['id'] for item in existing_results}  # Set of already processed IDs
+        logging.info("Loading existing results...")
+        existing_results = load_existing_results(output_file_path)
+        processed_ids = {item['id'] for item in existing_results}  # Set of already processed IDs
 
-    logging.info(f"Skipping {len(processed_ids)} already processed questions.")
+        logging.info(f"Skipping {len(processed_ids)} already processed questions.")
 
-    results = existing_results  # Start with existing results
-    for idx, item in enumerate(tqdm(input_data, desc="Processing Questions", unit="question")):
-        question_id = item.get("id")
-        if question_id in processed_ids:
-            continue  # Skip already processed IDs
+        results = existing_results  # Start with existing results
+        for idx, item in enumerate(tqdm(input_data, desc="Processing Questions", unit="question")):
+            question_id = item.get("id")
+            if question_id in processed_ids:
+                continue  # Skip already processed IDs
 
-        question = item.get("question", "")
-        if not question:
-            logging.warning(f"Skipping entry with missing question: {item}")
-            continue
+            question = item.get("question", "")
+            if not question:
+                logging.warning(f"Skipping entry with missing question: {item}")
+                continue
 
-        llm_reply = query_vllm(question)
-        results.append({
-            "id": question_id,
-            "question": question,
-            "ground_truth": item.get("ground_truth"),
-            "answer": llm_reply
-        })
+            llm_reply = query_vllm(question)
+            results.append({
+                "id": question_id,
+                "question": question,
+                "ground_truth": item.get("ground_truth"),
+                "answer": llm_reply
+            })
 
-        # Save every 10 entries
-        if (len(results) - len(existing_results)) % 10 == 0:
-            save_intermediate_results(results, output_file_path)
+            # Save every 10 entries
+            if (len(results) - len(existing_results)) % 10 == 0:
+                save_intermediate_results(results, output_file_path)
 
-    # Final save
-    logging.info("Saving final results to output JSON file...")
-    save_intermediate_results(results, output_file_path)
+        # Final save
+        logging.info("Saving final results to output JSON file...")
+        save_intermediate_results(results, output_file_path)
 
-    logging.info(f"Process completed. Results saved to {output_file_path}")
+        logging.info(f"Process completed. Results saved to {output_file_path}")
+
+    finally:
+        logging.info("Terminating vLLM server...")
+        vllm_process.terminate()
+        vllm_process.wait()
 
 if __name__ == "__main__":
     main()
