@@ -6,7 +6,7 @@ set -o pipefail
 
 # Check for mode argument
 if [ -z "$1" ]; then
-    echo "Usage: $0 [index|tune|query]"
+    echo "Usage: $0 [index|tune|query|baseline]"
     exit 1
 fi
 
@@ -25,9 +25,13 @@ case "$MODE" in
         JOB_NAME="GraphRAG_Querying"
         LOG_DIR="batch_logs/logs/querying"
         ;;
+    baseline)
+        JOB_NAME="GraphRAG_Baseline"
+        LOG_DIR="batch_logs/logs/baseline"
+        ;;
     *)
         echo "Invalid mode: $MODE"
-        echo "Usage: $0 [index|tune|query]"
+        echo "Usage: $0 [index|tune|query|baseline]"
         exit 1
         ;;
 esac
@@ -64,6 +68,8 @@ elif [ "$MODE" == "tune" ]; then
     python path/to/scripts/prompt_tune.py
 elif [ "$MODE" == "query" ]; then
     python path/to/scripts/query_graphrag.py
+elif [ "$MODE" == "baseline" ]; then
+    python path/to/scripts/baseline.py
 fi
 
 echo "$MODE job completed successfully at $(date)"

@@ -90,12 +90,6 @@ Each job automatically:
 ```bash
 GraphRAG_Evaluation/
 ├── run_graphrag_job.sh           # Unified Slurm job submission script
-├── batch_logs/                   # Log outputs from Slurm jobs
-│    ├── logs/
-│         ├── indexing/
-│         ├── tuning/
-│         ├── querying/
-│         ├── baseline/
 ├── scripts/
 │    ├── indexing.py              # Indexing script
 │    ├── prompt_tune.py           # Prompt tuning script
@@ -116,11 +110,11 @@ GraphRAG_Evaluation/
 | **Requirements** | See `requirements.txt` (all libraries and versions listed) |
 
 ### Models Used
-| Purpose | Model | Link |
-| :--- | :--- | :--- |
-| Main LLM | [meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) |
-| Embedding Model | [intfloat/e5-mistral-7b-instruct](https://huggingface.co/intfloat/e5-mistral-7b-instruct) |
-| Evaluation Model | `gpt-4o-mini` |
+| Purpose | Model |  
+| :--- | :--- | 
+| Main LLM | [meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) 
+| Embedding Model | [intfloat/e5-mistral-7b-instruct](https://huggingface.co/intfloat/e5-mistral-7b-instruct) 
+| Evaluation Model | `gpt-4o-mini` 
 
 ---
 
